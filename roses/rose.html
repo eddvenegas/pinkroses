@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rosas Animadas</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: linear-gradient(to bottom, #021B79, #0575E6);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            position: relative;
+        }
+        .rose {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-image: url('rosarosada.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            filter: drop-shadow(0 0 10px rgba(255, 77, 109, 0.8));
+            animation: float 5s infinite ease-in-out;
+            cursor: grab;
+        }
+        @keyframes float {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+        .text {
+            position: absolute;
+            top: 10%;
+            font-size: 50px;
+            font-weight: bold;
+            font-family: sans-serif;
+            color: #FF4D6D;
+            text-shadow: 0 0 10px rgba(255, 77, 109, 0.8), 0 0 20px rgba(255, 77, 109, 1);
+        }
+    </style>
+</head>
+<body>
+    <div class="text">HAPPY DAY</div>
+    <script>
+        function createRose() {
+            const rose = document.createElement('div');
+            rose.classList.add('rose');
+            document.body.appendChild(rose);
+            
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+            const offsetX = (Math.random() - 0.5) * 200;
+            const offsetY = (Math.random() - 0.5) * 200;
+            
+            rose.style.left = `${centerX + offsetX}px`;
+            rose.style.top = `${centerY + offsetY}px`;
+            
+            rose.addEventListener('mousedown', startDrag);
+        }
+
+        function startDrag(event) {
+            const rose = event.target;
+            rose.style.position = 'absolute';
+            rose.style.zIndex = 1000;
+
+            function moveAt(pageX, pageY) {
+                rose.style.left = pageX - rose.offsetWidth / 2 + 'px';
+                rose.style.top = pageY - rose.offsetHeight / 2 + 'px';
+            }
+
+            function onMouseMove(event) {
+                moveAt(event.pageX, event.pageY);
+            }
+
+            document.addEventListener('mousemove', onMouseMove);
+
+            rose.onmouseup = function() {
+                document.removeEventListener('mousemove', onMouseMove);
+                rose.onmouseup = null;
+            };
+        }
+
+        setInterval(createRose, 1000);
+    </script>
+</body>
+</html>
